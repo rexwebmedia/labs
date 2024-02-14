@@ -46,13 +46,13 @@
                         </div>
                         <div class="grow overflow-y-auto app-scrollbar border-b">
 
-                            <a href="#!" class="flex px-3 py-2 items-center gap-2 font-medium text-gray-600 hover:bg-gray-100">
+                            <a href="{{ route('lab-tests.index') }}" class="{{ request()->routeIs('lab-tests.index') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }} flex px-3 py-2 items-center gap-2 font-medium">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" width="24" height="24" viewBox="0 -960 960 960"><path d="M402-402 143-507q-13-5-19-15.5t-6-21.5q0-11 6.5-21.5T144-581l614-228q12-5 23-2t19 11q8 8 11 19t-2 23L581-144q-5 13-15.5 19.5T544-118q-11 0-21.5-6T507-143L402-402Zm140 134 162-436-436 162 196 78 78 196Zm-78-196Z"/></svg>
-                                <span>Locations</span>
+                                <span>Lab Tests</span>
                             </a>
-                            <a href="#!" class="flex px-3 py-2 items-center gap-2 font-medium text-gray-600 hover:bg-gray-100">
+                            <a href="{{ route('lab-test-categories.index') }}" class="{{ request()->routeIs('lab-test-categories.index') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }} flex px-3 py-2 items-center gap-2 font-medium">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" width="24" height="24" viewBox="0 -960 960 960"><path d="M402-402 143-507q-13-5-19-15.5t-6-21.5q0-11 6.5-21.5T144-581l614-228q12-5 23-2t19 11q8 8 11 19t-2 23L581-144q-5 13-15.5 19.5T544-118q-11 0-21.5-6T507-143L402-402Zm140 134 162-436-436 162 196 78 78 196Zm-78-196Z"/></svg>
-                                <span>Services</span>
+                                <span>Lab Test Categories</span>
                             </a>
 
                         </div>
@@ -70,7 +70,6 @@
         @stack('modals')
         @livewireScripts
         <script defer src="/js/lib/toastify.min.js?v={{ config('app.version') }}"></script>
-        <script defer src="/js/global.js?v={{ config('app.version') }}"></script>
         <script defer src="/js/admin/global.js?v={{ config('app.version') }}"></script>
     </body>
 </html>

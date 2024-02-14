@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SocialLoginController;
+use App\Http\Controllers\LabTestController;
+use App\Http\Controllers\LabTestCategoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +31,14 @@ Route::middleware('guest')->group(function () {
     ]);
 });
 
+Route::middleware('auth')->prefix('dashboard')->group(function(){
+    Route::resource('lab-tests', LabTestController::class, [
+        'name' => 'lab-tests'
+    ]);
+    Route::resource('lab-test-categories', LabTestCategoryController::class, [
+        'name' => 'lab-test-categories'
+    ]);
+});
 
 
 Route::middleware([
