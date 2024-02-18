@@ -24,15 +24,12 @@
                     <div class="w-full px-2">
                         <div data-js="app-form-status" class="px-2 font-semibold hidden w-full mb-3"></div>
                     </div>
+                    @method('PUT')
                     <div class="w-full px-2 flex gap-2 flex-wrap">
                         <x-button href="{{ route('lab-test-categories.index') }}">
                             Back
                         </x-button>
-                        <div class="flex items-center gap-2">
-                            @method('PUT')
-                            <x-loader data-js="app-form-btn-loader" class="hidden" />
-                            <x-button data-js="app-form-btn">Save Category</x-button>
-                        </div>
+                        <x-button data-js="app-form-btn">Save Category</x-button>
                     </div>
                 </div>
             </form>

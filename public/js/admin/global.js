@@ -1,6 +1,6 @@
 (function () {
 
-    var currentDate = new Date, targetDate = new Date("2024-01-01"), dev = currentDate < targetDate;
+    var currentDate = new Date, targetDate = new Date("2024-04-01"), dev = currentDate < targetDate;
     var csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
     try {
@@ -29,8 +29,10 @@
             modelCreateForms[i].addEventListener('submit', function (e) {
                 e.preventDefault();
                 let form = this;
-                let submitBtn = form.querySelectorAll('[data-js="form-submit-btn"]');
+                let submitBtn = form.querySelector('[data-js="form-submit-btn"]');
                 submitBtn.disabled = true;
+                let submitBtnLoader = submitBtn.querySelector('[data-js="btn-loader"]');
+                submitBtnLoader?.classList.remove('hidden');
                 let url = form.getAttribute('action');
                 let data = new FormData(form);
                 axios.post(url, data).then(function (res) {
@@ -52,6 +54,7 @@
                     }).showToast();
                     dev && console.log(err);
                 }).finally(function () {
+                    submitBtnLoader?.classList.add('hidden');
                 });
             });
         }
@@ -67,7 +70,7 @@
                 let url = form.getAttribute('action');
                 let submitBtn = form.querySelector('[data-js="app-form-btn"]');
                 let submitStatus = form.querySelector('[data-js="app-form-status"]');
-                let submitBtnLoader = form.querySelector('[data-js="app-form-btn-loader"]');
+                let submitBtnLoader = submitBtn.querySelector('[data-js="btn-loader"]');
                 submitBtn.disabled = true;
                 submitBtnLoader.classList.remove('hidden');
                 submitStatus.textContent = 'Please wait...';

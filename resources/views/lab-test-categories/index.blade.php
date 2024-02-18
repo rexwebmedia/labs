@@ -26,7 +26,10 @@
                     @if(!empty($items) && count($items))
                         @foreach($items as $item)
                             <tr class="border-b">
-                                <td class="px-3 py-2">{{ $item->name }}</td>
+                                <td class="px-3 py-2">
+                                    {{ $item->name }}
+                                    <span class="text-xs inline-block px-2 py-1 font-semibold uppercase rounded {{ $item->status == 'published' ? 'bg-primary-100' : 'bg-red-100' }}">{{ $item->status }}</span>
+                                </td>
                                 <td class="px-3 py-2">{{ $item->lab_tests_count }}</td>
                                 <td class="px-3 py-2">
                                     <a href="{{ route('lab-test-categories.edit', $item) }}">Edit</a>

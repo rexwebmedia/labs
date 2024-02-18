@@ -2,7 +2,7 @@
     <div class="xl:container px-4 py-4">
         <div class="flex justify-between">
             <div class="">
-                <h1 class="text-2xl font-semibold">{{ $item->name }}</h1>
+                <h1 class="text-2xl font-semibold">Lab Test</h1>
             </div>
             <div class="self-center">
             </div>
@@ -42,15 +42,10 @@
                     <div class="w-full px-2">
                         <div data-js="app-form-status" class="px-2 font-semibold hidden w-full mb-3"></div>
                     </div>
+                    @method('PUT')
                     <div class="w-full px-2 flex gap-2 flex-wrap">
-                        <x-button href="{{ route('lab-tests.index') }}">
-                            Back
-                        </x-button>
-                        <div class="flex items-center gap-2">
-                            @method('PUT')
-                            <x-loader data-js="app-form-btn-loader" class="hidden" />
-                            <x-button data-js="app-form-btn">Save Lab Test</x-button>
-                        </div>
+                        <x-button href="{{ route('lab-tests.index') }}">Back</x-button>
+                        <x-button data-js="app-form-btn">Save Lab Test</x-button>
                     </div>
                 </div>
             </form>
