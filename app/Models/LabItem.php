@@ -6,7 +6,7 @@ use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LabTestCategory extends Model
+class LabItem extends Model
 {
     use HasFactory;
     use UuidTrait;
@@ -22,13 +22,14 @@ class LabTestCategory extends Model
 
     protected $fillable = [
         'name',
+        'price',
         'status',
         'team_id',
+        'lab_item_category_id',
     ];
 
-    public function labTests()
+    public function category()
     {
-        return $this->hasMany(LabTest::class, 'lab_test_category_id', 'id');
+        return $this->belongsTo(LabItemCategory::class, 'lab_item_category_id');
     }
-
 }

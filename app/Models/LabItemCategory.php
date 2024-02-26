@@ -6,7 +6,7 @@ use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LabTestCategory extends Model
+class LabItemCategory extends Model
 {
     use HasFactory;
     use UuidTrait;
@@ -26,9 +26,8 @@ class LabTestCategory extends Model
         'team_id',
     ];
 
-    public function labTests()
+    public function labItems()
     {
-        return $this->hasMany(LabTest::class, 'lab_test_category_id', 'id');
+        return $this->hasMany(LabItem::class, 'lab_item_category_id', 'id');
     }
-
 }

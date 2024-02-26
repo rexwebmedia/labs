@@ -7,7 +7,7 @@
             <div class="self-center">
                 <form action="{{ route('lab-tests.store') }}" method="post" data-js="form-model-create">
                     <x-button type="submit" data-js="form-submit-btn">
-                        Add Lab Test
+                        Add New
                     </x-button>
                 </form>
             </div>

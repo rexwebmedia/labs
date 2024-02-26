@@ -18,8 +18,8 @@ use App\Http\Controllers\AuthController;
 Route::prefix('v1')->name('api.')->group(function(){
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/forgot-password', [AuthController::class, 'login'])->name('login');
-    Route::post('/reset-password', [AuthController::class, 'login'])->name('login');
+    Route::post('/forgot-password', [AuthController::class, 'login'])->name('forgot-password');
+    Route::post('/reset-password', [AuthController::class, 'login'])->name('reset-password');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

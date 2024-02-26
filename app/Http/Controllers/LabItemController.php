@@ -2,20 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LabTestCategory;
-use Illuminate\Http\Request;
+use App\Models\LabItem;
+use App\Models\LabItemCategory;
 use Exception;
+use Illuminate\Http\Request;
 
-class LabTestCategoryController extends Controller
+class LabItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only([
+            'index', 'store', 'update', 'edit', 'create'
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $req)
     {
-        $items = LabTestCategory::withCount('labTests')
+        $team_id = $req->user()->currentTeam->id;
+        $items = LabItem::where('team_id', $team_id)
+                    ->with('category:id,name')
                     ->paginate(10)->withQueryString();
-        return view('lab-test-categories.index', ['items' => $items]);
+        return view('lab-items.index', ['items' => $items]);
     }
 
     /**
@@ -34,14 +44,14 @@ class LabTestCategoryController extends Controller
         try {
             // $nanoidClient = new Client();
             // $nanoid = $nanoidClient->generateId();
-            $item = LabTestCategory::create([
-                'name' => 'New lab test',
+            $item = LabItem::create([
+                'name' => 'New lab item',
                 'team_id' => $req->user()->currentTeam->id,
             ]);
             return response()->json([
                 'success' => true,
-                'redirect' => route('lab-test-categories.edit', $item),
-                'message' => 'Lab Test Category created',
+                'redirect' => route('lab-items.edit', $item),
+                'message' => 'Lab Item created',
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -53,7 +63,7 @@ class LabTestCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LabTestCategory $labTestCategory)
+    public function show(LabItem $labItem)
     {
         //
     }
@@ -61,23 +71,32 @@ class LabTestCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(LabTestCategory $labTestCategory)
+    public function edit(Request $req, LabItem $labItem)
     {
-        return view('lab-test-categories.edit', [
-            'item' => $labTestCategory,
+        $team_id = $req->user()->currentTeam->id;
+        $categories = LabItemCategory::where('team_id', $team_id)
+                        ->where('status', 'published')
+                        ->get(['id', 'name']);
+        return view('lab-items.edit', [
+            'item' => $labItem,
+            'categories' => $categories,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $req, LabTestCategory $labTestCategory)
+    public function update(Request $req, LabItem $labItem)
     {
-        $item = $labTestCategory;
+        $item = $labItem;
         $validated = $req->validate([
             'name' => ['required', 'string', 'max:255'],
+            'price' => ['nullable',],
+            'category' => ['nullable'],
             'status' => ['nullable', 'in:draft,published'],
         ]);
+
+        $validated['lab_item_category_id'] = $validated['category'] ?? null;
 
         try {
             $item->update($validated);
@@ -95,7 +114,7 @@ class LabTestCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LabTestCategory $labTestCategory)
+    public function destroy(LabItem $labItem)
     {
         //
     }

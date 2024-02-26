@@ -4,6 +4,16 @@
             <x-authentication-card-logo />
         </x-slot>
 
+        <div class="mb-3">
+            <x-button.google />
+        </div>
+
+        <div class="text-sm flex items-center text-center mb-3 select-none">
+            <span class="grow border-b"></span>
+            <span class="px-2">{{ __('or continue with email') }}</span>
+            <span class="grow border-b"></span>
+        </div>
+
         <x-validation-errors class="mb-4" />
 
         <form method="POST" action="{{ route('register') }}">

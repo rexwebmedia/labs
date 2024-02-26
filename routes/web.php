@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\LabItemCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\LabTestCategoryController;
+use App\Http\Controllers\LabItemController;
 
 
 /*
@@ -38,6 +40,14 @@ Route::middleware('auth')->prefix('dashboard')->group(function(){
     Route::resource('lab-test-categories', LabTestCategoryController::class, [
         'name' => 'lab-test-categories'
     ]);
+
+    Route::resource('lab-items', LabItemController::class, [
+        'name' => 'lab-items',
+    ]);
+    Route::resource('lab-item-categories', LabItemCategoryController::class, [
+        'name' => 'lab-item-categories',
+    ]);
+
 });
 
 
@@ -46,7 +56,5 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
 });
