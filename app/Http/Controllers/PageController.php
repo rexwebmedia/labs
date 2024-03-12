@@ -15,8 +15,9 @@ class PageController extends Controller
 
     public function dashboard(Request $req)
     {
-        $labItemsCount = LabItem::count();
-        $labTestsCount = LabTest::count();
+        $currentUser = $req->user();
+        $labItemsCount = LabItem::where('team_id', $currentUser->currentTeam->id)->count();
+        $labTestsCount = LabTest::where('team_id', $currentUser->currentTeam->id)->count();
         return view('dashboard', [
             'labItemsCount' => $labItemsCount,
             'labTestsCount' => $labTestsCount,

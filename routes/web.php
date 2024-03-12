@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\LabItemCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\LabTestCategoryController;
 use App\Http\Controllers\LabItemController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -47,6 +49,11 @@ Route::middleware('auth')->prefix('dashboard')->group(function(){
     Route::resource('lab-item-categories', LabItemCategoryController::class, [
         'name' => 'lab-item-categories',
     ]);
+
+    Route::get('doctors', [DoctorController::class, 'index'])->name('doctors.index');
+    Route::post('doctors', [DoctorController::class, 'store'])->name('doctors.store');
+    Route::get('doctors/{id}/edit', [DoctorController::class, 'edit'])->name('doctors.edit');
+
 
 });
 
