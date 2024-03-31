@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CommissionTypeEnum;
+use Exception;
 use App\Enums\UserRoleEnum;
 use App\Models\Team;
 use App\Models\User;
-use Exception;
 use Hidehalo\Nanoid\Client;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Enum;
 
-class DoctorController extends Controller
+class UserController extends Controller
 {
     public function index(Request $req)
     {
         $currentUser = $req->user();
         $items = $currentUser->currentTeam->allUsers();
-        return view('doctors.index', ['items' => $items]);
+
+        $items = User::where('current_team_id', $currentUser->currentTeam->id)
+                    ->latest()->paginate(10)->withQueryString();
+
+        return view('users.index', ['items' => $items]);
         // if($currentUser->role == UserRoleEnum::ADMIN){
         // } else if($currentUser->role == UserRoleEnum::RESELLER){
         //     $query = $query->where('role', UserRoleEnum::USER);
@@ -36,10 +40,9 @@ class DoctorController extends Controller
      */
     public function create()
     {
-        // $commission_types = CommissionTypeEnum::toArray();
-        // return view('users.create', [
-        //     'commission_types' => $commission_types
-        // ]);
+        return view('users.create', [
+            'userRoles' => UserRoleEnum::toArray(),
+        ]);
     }
 
     /**
@@ -48,40 +51,45 @@ class DoctorController extends Controller
     public function store(Request $req)
     {
         $currentUser = $req->user();
-        // $req->merge(['email' => strtolower($req['email']) ]);
-        // $validated = $req->validate([
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'lastname' => ['nullable', 'string', 'max:255'],
-        //     'email' => ['string', 'email', 'max:255', Rule::unique(User::class)],
-        //     'phone' => ['nullable', 'string', 'max:255'],
-        //     'role' => [new Enum(UserRoleEnum::class)],
-        //     'password' => ['string', 'max:26'],
-        //     'referral_code' => ['nullable', 'string', 'max:255',],
-        //     'unique_code' => ['nullable', 'string', 'max:255', Rule::unique(User::class)],
-        // ]);
+        $req->merge(['email' => strtolower($req['email']) ]);
+        $validated = $req->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'lastname' => ['nullable', 'string', 'max:255'],
+            'email' => ['string', 'email', 'max:255', Rule::unique(User::class)],
+            'role' => [ new Enum(UserRoleEnum::class) ],
+            'password' => ['string', 'max:26'],
+        ]);
 
-        // if($currentUser->role !== UserRoleEnum::ADMIN) {
-        //     $validated['role'] = UserRoleEnum::USER;
-        // }
+        if( !in_array($validated['role'], [
+            UserRoleEnum::DOCTOR->value, UserRoleEnum::ADMIN->value]
+        ) ){
+            $validated['role'] = UserRoleEnum::DOCTOR->value;
+        }
+        $validated['password'] = Hash::make($validated['password']);
 
-        // if($currentUser->role == UserRoleEnum::RESELLER){
-        //     $validated['referral_code'] = $currentUser->unique_code;
-        // }
+        try {
+            $item = User::create($validated);
 
-        // $validated['password'] = Hash::make($validated['password']);
+            event(new Registered($item));
+            // $newTeam = Team::forceCreate([
+            //     'user_id' => $item->id,
+            //     'name' => explode(' ', $item->name, 2)[0]."'s Team",
+            //     'personal_team' => true,
+            // ]);
+            // $newTeam->save();
+            $item->current_team_id = $currentUser->currentTeam->id;
+            $item->save();
 
-        // try {
-        //     $item = User::create($validated);
-        //     return response()->json([
-        //         'success' => true,
-        //         'redirect' => route('users.edit', $item->id),
-        //         'message' => 'User created',
-        //     ]);
-        // } catch (Exception $e) {
-        //     return response()->json([
-        //         'success' => false, 'message' => $e->getMessage(),
-        //     ], 500);
-        // }
+            return response()->json([
+                'success' => true,
+                'redirect' => route('users.edit', $item->id),
+                'message' => 'Doctor created',
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false, 'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -98,16 +106,14 @@ class DoctorController extends Controller
     public function edit(Request $req, User $user)
     {
         $currentUser = $req->user();
-        // if($currentUser->role == UserRoleEnum::RESELLER){
-        //     if($user->referral_code != $currentUser->unique_code){
-        //         abort(403, 'Access denied');
-        //     }
-        // }
+        if($currentUser->currentTeam->id != $user->currentTeam->id){
+            abort(403, 'Access denied');
+        }
 
-        // return view('users.edit', [
-        //     'item' => $user,
-        //     'roles' => UserRoleEnum::toArray(),
-        // ]);
+        return view('users.edit', [
+            'item' => $user,
+            'userRoles' => UserRoleEnum::toArray(),
+        ]);
     }
 
     /**
@@ -115,33 +121,32 @@ class DoctorController extends Controller
      */
     public function update(Request $req, User $user)
     {
-        $currentUser = $req->user();
-        // $item = $user;
-        // $req->merge(['email' => strtolower($req['email']) ]);
-        // $validated = $req->validate([
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'lastname' => ['nullable', 'string', 'max:255'],
-        //     'email' => ['string', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-        //     'phone' => ['nullable', 'string', 'max:255'],
-        //     'role' => [new Enum(UserRoleEnum::class)],
-        //     'referral_code' => ['nullable', 'string', 'max:255',],
-        //     'unique_code' => ['nullable', 'string', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-        // ]);
+        // $currentUser = $req->user();
+        $item = $user;
+        $req->merge(['email' => strtolower($req['email']) ]);
+        $validated = $req->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'lastname' => ['nullable', 'string', 'max:255'],
+            'email' => ['string', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            'role' => [ new Enum(UserRoleEnum::class) ],
+        ]);
 
-        // if($currentUser != UserRoleEnum::ADMIN) {
-        //     $validated['role'] = UserRoleEnum::USER;
-        // }
+        if( !in_array($validated['role'], [
+            UserRoleEnum::DOCTOR->value, UserRoleEnum::ADMIN->value]
+        ) ){
+            $validated['role'] = UserRoleEnum::DOCTOR->value;
+        }
 
-        // try {
-        //     $item->update($validated);
-        //     return response()->json([
-        //         'success' => true, 'message' => 'Saved successfully',
-        //     ]);
-        // } catch (Exception $e) {
-        //     return response()->json([
-        //         'success' => false, 'message' => $e->getMessage(),
-        //     ], 500);
-        // }
+        try {
+            $item->update($validated);
+            return response()->json([
+                'success' => true, 'message' => 'Saved successfully',
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false, 'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

@@ -76,8 +76,8 @@
                 submitStatus.textContent = 'Please wait...';
                 submitStatus.classList.remove('hidden');
                 axios.post(url, data).then(function (res) {
-                    if (res.redirect) {
-                        window.location.href = res.redirect;
+                    if (res.data.redirect) {
+                        window.location.href = res.data.redirect;
                     }
                     let msg = (res.data?.message) ? res.data.message : 'Success';
                     submitStatus.textContent = msg;

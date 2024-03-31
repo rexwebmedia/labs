@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\LabItemCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
@@ -9,18 +8,6 @@ use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\LabTestCategoryController;
 use App\Http\Controllers\LabItemController;
 use App\Http\Controllers\UserController;
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/ideas', function(){ return view('pages.ideas'); });
@@ -50,13 +37,11 @@ Route::middleware('auth')->prefix('dashboard')->group(function(){
         'name' => 'lab-item-categories',
     ]);
 
-    Route::get('doctors', [DoctorController::class, 'index'])->name('doctors.index');
-    Route::post('doctors', [DoctorController::class, 'store'])->name('doctors.store');
-    Route::get('doctors/{id}/edit', [DoctorController::class, 'edit'])->name('doctors.edit');
-
+    Route::resource('users', UserController::class, [
+        'name' => 'users',
+    ]);
 
 });
-
 
 Route::middleware([
     'auth:sanctum',

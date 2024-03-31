@@ -1,50 +1,27 @@
-<x-guest-layout>
+<x-app-layout>
     <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+        <h1 class="mb-4 text-2xl font-semibold text-center">Create Account</h1>
 
-        <div class="mb-3">
-            <x-button.google />
-        </div>
-
-        <div class="text-sm flex items-center text-center mb-3 select-none">
-            <span class="grow border-b"></span>
-            <span class="px-2">{{ __('or continue with email') }}</span>
-            <span class="grow border-b"></span>
-        </div>
-
-        <x-validation-errors class="mb-4" />
+        <x-validation-errors class="mb-5" />
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <div class="mb-4">
-                <x-label for="name" value="{{ __('Name') }}" />
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            </div>
+            <x-float.input id="email" name="email" type="text" value="{{ old('email') }}" required autofocus label="Email" placeholder="Email" class="mb-5" />
+            <x-float.input id="name" name="name" type="text" value="{{ old('name') }}" required label="Name" placeholder="Name" class="mb-5" />
+            <x-float.input id="password" name="password" type="password" required label="Password" placeholder="Password" class="mb-5" />
+            <x-float.input id="password_confirmation" name="password_confirmation" type="password" required label="Confirm Password" placeholder="Confirm Password" class="mb-3" />
 
-            <div class="mb-4">
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            </div>
-
-            <div class="mb-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mb-4">
-                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="mb-4">
-                <x-label for="role" value="{{ __('Register as') }}" />
-                <select name="role" class="w-full border-gray-300 rounded-md shadow-sm">
-                    <option value="{{ \App\Enums\UserRoleEnum::ADMIN }}">{{ \App\Enums\UserRoleEnum::DOCTOR }}</option>
-                    <option value="{{ \App\Enums\UserRoleEnum::PATIENT }}">{{ \App\Enums\UserRoleEnum::PATIENT }}</option>
-                </select>
+            <span>Register as:</span>
+            <div class="flex gap-5 mb-2">
+                <label class="inline-flex gap-2 items-center cursor-pointer">
+                    <input type="radio" name="role" checked value="{{ \App\Enums\UserRoleEnum::ADMIN }}" />
+                    <span>Clinic</span>
+                </label>
+                <label class="inline-flex gap-2 items-center cursor-pointer">
+                    <input type="radio" name="role" value="{{ \App\Enums\UserRoleEnum::PATIENT }}" />
+                    <span>Patient</span>
+                </label>
             </div>
 
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
@@ -64,15 +41,8 @@
                 </div>
             @endif
 
-            <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
-
-                <x-button class="ms-4">
-                    {{ __('Register') }}
-                </x-button>
-            </div>
+            <x-button class="w-full mb-2">{{ __('Register') }}</x-button>
         </form>
+        <p>Already have an account. <a href="{{ route('login') }}" class="font-semibold text-primary-500">{{ __('Login') }}</a></p>
     </x-authentication-card>
-</x-guest-layout>
+</x-app-layout>

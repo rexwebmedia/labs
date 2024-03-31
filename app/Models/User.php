@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRoleEnum;
 use App\Traits\UuidTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,7 +29,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'role', 'password',
     ];
 
     /**
@@ -50,6 +51,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'role' => UserRoleEnum::class,
     ];
 
     /**
@@ -60,4 +62,37 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+
+    public function isSuperAdmin()
+    {
+        if($this->role == UserRoleEnum::SUPERADMIN) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isAdmin()
+    {
+        if($this->role == UserRoleEnum::ADMIN) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isDoctor()
+    {
+        if($this->role == UserRoleEnum::DOCTOR) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isPatient()
+    {
+        if($this->role == UserRoleEnum::PATIENT) {
+            return true;
+        }
+        return false;
+    }
 }

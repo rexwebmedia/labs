@@ -33,6 +33,7 @@ class SocialLoginController extends Controller
                 Auth::login($finduser);
                 return redirect(RouteServiceProvider::HOME);
             } else {
+                return redirect()->route('register')->withErrors(['email' => 'Account not found for login with Google']);
                 $newUser = User::updateOrCreate([
                     'email' => $googleUser->email,
                 ], [

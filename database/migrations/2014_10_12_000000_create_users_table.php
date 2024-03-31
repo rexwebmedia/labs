@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('username')->nullable();
             $table->string('phone')->nullable();
-            $table->string('role')->default(UserRoleEnum::PATIENT);
+            $table->string('role')->default(UserRoleEnum::ADMIN);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();;
             $table->rememberToken();

@@ -30,7 +30,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        if( in_array($input['role'], [UserRoleEnum::ADMIN, UserRoleEnum::PATIENT]) ){
+        if( in_array($input['role'], [UserRoleEnum::ADMIN->value, UserRoleEnum::PATIENT->value]) ){
             // role is okay
         } else {
             $input['role'] = UserRoleEnum::ADMIN;

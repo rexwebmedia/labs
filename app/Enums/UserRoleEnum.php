@@ -9,11 +9,13 @@ enum UserRoleEnum: string
     case DOCTOR     = 'DOCTOR';
     case PATIENT    = 'PATIENT';
 
-    public static function toArray(): array
+    public static function toArray($onlyPublic = true): array
     {
         $arr = [];
         foreach (self::cases() as $case) {
-            $arr[$case->value] = $case->name;
+            if($onlyPublic && in_array($case->value, ['ADMIN', 'DOCTOR']) ) {
+                $arr[$case->value] = $case->name;
+            }
         }
         return $arr;
     }

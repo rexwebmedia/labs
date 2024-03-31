@@ -2,14 +2,12 @@
     <div class="xl:container px-3 py-4">
         <div class="flex mb-3 justify-between">
             <div class="">
-                <h1 class="text-2xl font-semibold">Doctors</h1>
+                <h1 class="text-2xl font-semibold">Staff Members</h1>
             </div>
             <div class="self-center">
-                <form action="{{ route('doctors.store') }}" method="post" data-js="form-model-create">
-                    <x-button type="submit" data-js="form-submit-btn">
-                        Add New
-                    </x-button>
-                </form>
+                <x-button href="{{ route('users.create') }}">
+                    Add New
+                </x-button>
             </div>
         </div>
         <div class="overflow-x-auto rounded">
@@ -17,6 +15,7 @@
                 <thead>
                     <tr class="border-b">
                         <th scope="col" class="px-3 py-2 text-start">Name</th>
+                        <th scope="col" class="px-3 py-2 text-start">Role</th>
                         <th scope="col" class="px-3 py-2 text-start">Action</th>
                     </tr>
                 </thead>
@@ -28,8 +27,11 @@
                                     {{ $item->name }}
                                     <div class="text-xs text-gray-500">{{ $item->email }}</div>
                                 </td>
+                                <td>
+                                    <span class="inline-block items-center rounded {{ $item->isDoctor() ? 'border-green-600 bg-green-50 text-green-700' : '' }} {{ $item->isPatient() ? 'border-blue-600 bg-blue-50 text-blue-700' : '' }} {{ $item->isAdmin() ? 'border-red-600 bg-red-50 text-red-700' : '' }} {{ $item->isSuperAdmin() ? 'border-gray-600 bg-gray-50 text-gray-700' : '' }} px-1 py-1 leading-none text-xs font-medium border">{{ $item->role }}</span>
+                                </td>
                                 <td class="px-3 py-2">
-                                    <a href="{{ route('doctors.edit', $item) }}">Edit</a>
+                                    <a href="{{ route('users.edit', $item) }}">Edit</a>
                                 </td>
                             </tr>
                         @endforeach

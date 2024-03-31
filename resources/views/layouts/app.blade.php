@@ -15,11 +15,16 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    @livewireStyles
+
+    <link rel="preload" as="style" href="/css/global.css?v={{ config('app.version') }}" />
+    <link rel="stylesheet" href="/css/global.css?v={{ config('app.version') }}" />
+
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&display=swap" />
     <link rel="stylesheet" media="print" onload="this.onload = null; this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&display=swap" />
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-gray-50">
     <header class="sticky top-0 w-full shadow bg-white">
         <div class="xl:container flex flex-row justify-between px-1">
             <a title="Bookify" class="flex-none flex flex-row items-center gap-2 px-1 py-1 text-xl leading-tight truncate select-none focus:outline focus:outline-blue-500" href="/">
@@ -65,5 +70,6 @@
         <main>{{ $slot }}</main>
     </div>
     @if( isset($scripts) ) {{ $scripts }} @endif
+    @livewireScripts
     <script defer src="/js/lib/alpine.min.js?v=3.13.5"></script>
 </body>
